@@ -1,0 +1,200 @@
+{% load heroicons %}
+
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    
+    <h2 class="mb-0">Jobs</h2>
+
+    <div class="d-flex gap-2">
+
+        <!-- Search -->
+        <form method="get" class="d-flex">
+            <input type="hidden" name="section" value="jobs">
+
+            <div class="input-group input-group-sm">
+
+                <input type="text" name="search" value="{{ search }}" class="form-control" placeholder="Search jobs...">
+
+                {% if search %}
+                    <a href="?section=jobs" class="btn btn-outline-secondary" title="Clear search">
+                        &times;
+                    </a>
+                {% endif %}
+
+                <button class="btn btn-outline-secondary">
+                    Search
+                </button>
+
+            </div>
+        </form>
+
+        <!-- Add Job -->
+        <a href="?section=jobs&action=add" class="btn btn-primary btn-sm">
+            Add Job
+        </a>
+
+    </div>
+</div>
+
+{% if action == "add" %}
+    <div class="card mb-4">
+        <div class="card-body">
+
+            <h4 class="fw-bold mb-3">Upload Profession</h4>
+
+            <form id="addJobForm" action="{% url 'upload_job' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="row">
+
+                    <div class="mb-3 col-md-6">
+                        <input type="text" name="job-title" class="form-control" placeholder="Job Title" required>
+                    </div>
+
+                    <div class="mb-3 col-md-6">
+                        <input type="text" name="job-sector" class="form-control" placeholder="Job Sector" required>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="input-group mb-3">
+                            <input type="file" name="job-image" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="mb-3">
+                            <textarea name="job-description" class="form-control" rows="3" placeholder="Describe What This Job Is About."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="col-12 d-flex gap-2">
+                        <button id="uploadBtn" type="submit" class="btn btn-success">
+                            Upload
+                        </button>
+                        <div id="uploadStatus" class="mt-2"> </div>
+
+                        <a href="?section=jobs&page={{ jobs.number }}" class="btn btn-secondary">
+                            Cancel
+                        </a>
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+{% endif %}
+
+{% for job in jobs %}
+
+    <div class="card mb-2">
+        <div class="card-body d-flex justify-content-between align-items-center">
+
+            <div>
+                <h5 class="mb-1"> 
+                    {{ job.title }} |
+                    <small class="text-muted">{{ job.sector }}</small>
+                </h5>
+            </div>
+
+            <div class="d-flex gap-2">
+
+                <!-- Edit -->
+                <a href="?section=jobs&edit={{ job.id }}&page={{ jobs.number }}{% if search %}&search={{ search }}{% endif %}" class="btn btn-primary btn-sm">
+                    Edit
+                </a>
+
+                <!-- Delete -->
+                <form class="delete-job-form" action="{% url 'delete_job' job.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm">
+                        Delete
+                    </button>
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+
+    {% if edit_id == job.id|stringformat:"s" %}
+    <div class="card mb-3 border-primary">
+        <div class="card-body">
+
+            <h5 class="mb-3">Edit Job</h5>
+
+            <form class="editJobForm" action="{% url 'edit_job' job.id %}" method="post" enctype="multipart/form-data">
+
+                {% csrf_token %}
+
+                <div class="row">
+
+                    <div class="mb-3 col-md-6">
+                        <input type="text" name="job-title" class="form-control" value="{{ job.title }}" required>
+                    </div>
+
+                    <div class="mb-3 col-md-6">
+                        <input type="text" name="job-sector" class="form-control" value="{{ job.sector }}">
+                    </div>
+
+                    <div class="col-12">
+                        <div class="input-group mb-3">
+                            <input type="file" name="job-image" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <textarea name="job-description" class="form-control" rows="3">{{ job.description }}</textarea>
+                    </div>
+
+                    <div class="col-12 mt-3 d-flex gap-2">
+                        <button type="submit" class="btn btn-success">
+                            Save Changes
+                        </button>
+
+                        <a href="?section=jobs&page={{ jobs.number }}{% if search %}&search={{ search }}{% endif %}" class="btn btn-secondary">
+                            Cancel
+                        </a>
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+    {% endif %}
+
+{% empty %}
+    <p>No jobs found.</p>
+{% endfor %}
+
+<nav class="mt-3">
+    <ul class="pagination">
+
+        {% if jobs.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?section=jobs&page={{ jobs.previous_page_number }}">
+                    Previous
+                </a>
+            </li>
+        {% endif %}
+
+        <li class="page-item active">
+            <span class="page-link">
+                Page {{ jobs.number }} of {{ jobs.paginator.num_pages }}
+            </span>
+        </li>
+
+        {% if jobs.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?section=jobs&page={{ jobs.next_page_number }}">
+                    Next
+                </a>
+            </li>
+        {% endif %}
+
+    </ul>
+</nav>
+

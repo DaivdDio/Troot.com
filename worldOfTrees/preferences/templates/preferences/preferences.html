@@ -1,0 +1,401 @@
+{% extends "base.html" %}
+{% load static %}
+{% load heroicons %}
+
+
+<!-- templates/preferences/preferences.html -->
+ <!--<script src="{% static 'js/preferences.js' %}"></script>-->
+
+
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        
+        <!-- Side Panel -->
+
+        
+
+        <div class="col-md-3 col-lg-2 bg-light border-end min-vh-100">
+            <div class="text-center mb-4">
+                <img src="{% static '/assets/img/user.png' %}" alt="Profile Picture" class="rounded-circle img-fluid border"
+                    style="width: 120px; height: 120px; object-fit: cover;"
+                >
+
+                <h6 class="mt-3 mb-0">{{ request.user.get_full_name|default:request.user.username }}</h6>
+                <small class="text-muted">{{ request.user.email }}</small>
+            </div>
+
+        <!-- Navigation -->
+
+            <div class="p-3">
+                <h5 class="mb-4">Preferences</h5>
+
+                <div class="nav flex-column nav-pills">
+                    <a class="nav-link {% if section == 'general' %}active{% endif %}" href="?section=general">
+                        General
+                    </a>
+                    <a class="nav-link {% if section == 'profile' %}active{% endif %}" href="?section=profile">
+                        Profile
+                    </a>
+                    <a class="nav-link {% if section == 'trees' %}active{% endif %}" href="?section=trees">
+                        Trees
+                    </a>
+                    <a class="nav-link {% if section == 'jobs' %}active{% endif %}" href="?section=jobs">
+                        Jobs
+                    </a>
+                    {% if request.user.is_superuser %}
+                        <a class="nav-link {% if section == 'security' %}active bg-danger{% endif %}" href="?section=security">
+                            Security
+                        </a>
+                    
+                        <a class="nav-link {% if section == 'users' %}active bg-danger{% endif %}"
+                        href="?section=users">
+                            Users
+                        </a>
+                    {% endif %}
+                    <a class="nav-link {% if section == 'appearance' %}active{% endif %}" href="?section=appearance">
+                        Appearance
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-9 col-lg-10">
+            <div class="p-4">
+
+                {% if section == "general" %}
+                    <div class="container-fluid">
+                        <h2 class="mb-4">Dashboard Overview</h2>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="card stat-card border-0 shadow-sm">
+                                    <div class="card-body text-center py-4">
+                                        <div class="mb-3">
+                                            <i class="bi bi-tree-fill fs-1 text-success"></i>
+                                        </div>
+
+                                        <h6 class="text-muted text-uppercase">
+                                            Total Trees
+                                        </h6>
+
+                                        <h1 class="fw-bold text-success mb-0">
+                                            {{ tree_count }}
+                                        </h1>
+
+                                        <small class="text-muted">
+                                            Trees currently in the database
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card job-stat-card border-0 shadow-sm">
+                                    <div class="card-body text-center py-4">
+                                        <div class="mb-3">
+                                            <i class="bi bi-briefcase-fill fs-1 text-primary"></i>
+                                        </div>
+
+                                        <h6 class="text-muted text-uppercase">
+                                            Total Jobs
+                                        </h6>
+
+                                        <h1 class="fw-bold text-primary mb-0">
+                                            {{ job_count }}
+                                        </h1>
+
+                                        <small class="text-muted">
+                                            Jobs currently in the database
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card visit-stat-card border-0 shadow-sm">
+                                    <div class="card-body text-center py-4">
+                                        <div class="mb-3">
+                                            <i class="bi bi-eye-fill fs-1 text-danger"></i>
+                                        </div>
+
+                                        <h6 class="text-muted text-uppercase">
+                                            Site Visits
+                                        </h6>
+
+                                        <h1 class="fw-bold text-danger mb-0">
+                                            {{ visit_count }}
+                                        </h1>
+
+                                        <small class="text-muted">
+                                            Total visits recorded
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-4">
+
+                            <div class="col-lg-6 mb-4">
+                                <div class="card border-0 shadow-sm">
+                                    <div class="card-header bg-white">
+                                        <h5 class="mb-0">Trees by Type</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="treeTypeChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 mb-4">
+                                <div class="card border-0 shadow-sm">
+                                    <div class="card-header bg-white">
+                                        <h5 class="mb-0">Trees by Conservation Status</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="conservationChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                {% elif section == "profile" %}
+                    <h2>Profile</h2>
+                
+                {% elif section == "trees" %}
+
+                    {% include "preferences/partials/trees_preferences.html" %}
+                    {% include "preferences/partials/tree_scripts.html" %}
+                    
+                {% elif section == "jobs" %}
+
+                    {% include "preferences/partials/jobs_preferences.html" %}
+                    {% include "preferences/partials/job_scripts.html" %}
+                    
+
+                {% elif section == "security" %}
+                    {% include "preferences/partials/security_preferences.html" %}
+                    <!--{% include "preferences/partials/job_scripts.html" %}-->
+
+                {% elif section == "users" %}
+
+                    <h2 class="mb-4">Users</h2>
+
+                    <form method="get" class="mb-3">
+                        <input type="hidden" name="section" value="users">
+
+                        <div class="input-group">
+                            <input
+                                type="text"
+                                name="search"
+                                class="form-control"
+                                placeholder="Search users..."
+                                value="{{ search }}">
+
+                            <button class="btn btn-primary">
+                                Search
+                            </button>
+                        </div>
+                    </form>
+
+                    <div class="card shadow-sm border-0">
+
+                        <div class="card-body">
+
+                            {% if users %}
+
+                                <div class="table-responsive">
+
+                                    <table class="table table-hover align-middle">
+
+                                        <thead>
+                                            <tr>
+                                                <th>Username</th>
+                                                <th>Email</th>
+                                                <th>Date Joined</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+
+                                            {% for user in users %}
+
+                                                <tr>
+                                                    <td>{{ user.username }}</td>
+
+                                                    <td>
+                                                        {{ user.email|default:"-" }}
+                                                    </td>
+
+                                                    <td>
+                                                        {{ user.date_joined|date:"d M Y" }}
+                                                    </td>
+
+                                                    <td>
+                                                        {% if user.is_active %}
+                                                            <span class="badge bg-success">
+                                                                Active
+                                                            </span>
+                                                        {% else %}
+                                                            <span class="badge bg-secondary">
+                                                                Inactive
+                                                            </span>
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+
+                                            {% endfor %}
+
+                                        </tbody>
+
+                                    </table>
+
+                                </div>
+
+                            {% else %}
+
+                                <div class="alert alert-info mb-0">
+                                    No users found.
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                {% elif section == "appearance" %}
+                    <h2>Appearance</h2>
+
+                {% endif %}
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+const treeTypeLabels = {{ tree_type_labels|safe }};
+const treeTypeCounts = {{ tree_type_counts|safe }};
+
+const conservationLabels = {{ conservation_labels|safe }};
+const conservationCounts = {{ conservation_counts|safe }};
+
+
+// Tree Type Chart
+new Chart(document.getElementById('treeTypeChart'), {
+    type: 'bar',
+    data: {
+        labels: treeTypeLabels,
+        datasets: [{
+            label: 'Number of Trees',
+            data: treeTypeCounts,
+            backgroundColor: [
+                '#198754',
+                '#20c997',
+                '#0d6efd'
+            ],
+            borderRadius: 6
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                display: false
+            }
+        }
+    }
+});
+
+
+// Conservation Status Chart
+new Chart(document.getElementById('conservationChart'), {
+    type: 'bar',
+    data: {
+        labels: conservationLabels,
+        datasets: [{
+            label: 'Trees',
+            data: conservationCounts,
+            backgroundColor: [
+                '#198754',
+                '#ffc107',
+                '#fd7e14',
+                '#dc3545',
+                '#6f42c1'
+            ],
+            borderRadius: 6
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                display: false
+            }
+        }
+    }
+});
+</script>
+
+
+<!--DATABASE RESTORE JAVASCRIPT-->
+
+<script>
+document.getElementById("restoreForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    let formData = new FormData(this);
+
+    let modal = new bootstrap.Modal(document.getElementById("restoreModal"));
+    modal.show();
+
+    document.getElementById("restoreMessage").innerText = "Starting restore...";
+
+    // fake progress (because Django cannot stream progress)
+    let progress = 0;
+    let interval = setInterval(() => {
+        if (progress < 90) {
+            progress += 10;
+            document.getElementById("restoreProgress").style.width = progress + "%";
+        }
+    }, 300);
+
+    fetch("{% url 'accounts:restore_database' %}", {
+        method: "POST",
+        body: formData,
+        headers: {
+            "X-CSRFToken": "{{ csrf_token }}"
+        }
+    })
+    .then(res => res.text())
+    .then(data => {
+
+        clearInterval(interval);
+
+        document.getElementById("restoreProgress").style.width = "100%";
+        document.getElementById("restoreMessage").innerText = data;
+
+    })
+    .catch(err => {
+
+        clearInterval(interval);
+
+        document.getElementById("restoreMessage").innerText =
+            "Restore failed.";
+
+        console.error(err);
+    });
+});
+</script>
+
+{% endblock %}
+

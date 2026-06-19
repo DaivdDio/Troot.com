@@ -1,0 +1,91 @@
+.stat-card {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: #fff;
+}
+
+.stat-card:hover {
+    background-color: #198754; /* Bootstrap success green */
+    transform: translateY(-5px);
+}
+
+.stat-card:hover .text-success,
+.stat-card:hover .text-muted,
+.stat-card:hover h1,
+.stat-card:hover h6,
+.stat-card:hover small,
+.stat-card:hover i {
+    color: #fff !important;
+}
+
+.job-stat-card {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: #fff;
+}
+
+.job-stat-card:hover {
+    background-color: #0d6efd; /* Bootstrap primary */
+    transform: translateY(-5px);
+}
+
+.job-stat-card:hover .text-primary,
+.job-stat-card:hover .text-muted,
+.job-stat-card:hover h1,
+.job-stat-card:hover h6,
+.job-stat-card:hover small,
+.job-stat-card:hover i {
+    color: #fff !important;
+}
+
+.visit-stat-card {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: #fff;
+}
+
+.visit-stat-card:hover {
+    background-color: #dc3545; /* Bootstrap danger */
+    transform: translateY(-5px);
+}
+
+.visit-stat-card:hover .text-danger,
+.visit-stat-card:hover .text-muted,
+.visit-stat-card:hover h1,
+.visit-stat-card:hover h6,
+.visit-stat-card:hover small,
+.visit-stat-card:hover i {
+    color: #fff !important;
+}
+
+.image-card{
+    overflow:hidden;
+    transition:all .3s ease;
+}
+
+.gallery-image{
+    transition:all .3s ease;
+}
+
+.gallery-image:hover{
+    transform:scale(1.05);
+}
+
+.image-card:hover{
+    transform:translateY(-5px);
+}
+
+/*-----------------------------------------*/
+
+.tree-card{
+    transition:all .3s ease;
+}
+
+.tree-card:hover{
+    transform:translateY(-6px);
+    box-shadow:0 1rem 2rem rgba(0,0,0,.15)!important;
+}
+
+.tree-card:hover .card-title{
+    color:#198754;
+}

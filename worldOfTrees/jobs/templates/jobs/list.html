@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container pt-3">
+    <h2 class="fw-bold">Professions</h2>
+    <h4>You can be anything you choose to be.</h4>
+    <p>Here are some of the jobs that are associated with Trees.</p>
+    <hr></hr>
+
+    <div class="row">
+        {% for job in jobs %}
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+            <div class="mb-3" style="max-width: 18rem;">
+                
+            
+                <div class="card shadow rounded-4 border border-secondary-subtle" style="height: 350px; overflow: hidden;">
+                    {% if job.image %}
+                        <img src="{{ job.image.url }}" class="card-img-top">
+                    {% else %}
+                        <p>No image available</p>
+                    {% endif %}
+                    
+                    <div class="card-img-overlay d-flex flex-column justify-content-end text-white">
+                        <h5 class="card-title">{{ job.title }}</h5>
+                        <p><strong>Sector:</strong> {{ job.sector }}</p>
+                    </div>
+                </div>
+
+                <p>{{ job.description|linebreaks }}</p>
+
+                <!--{% if user.is_authenticated %}
+                    <div class="text-center">
+                        <a href="{% url 'edit_job' job.id %}" class="btn btn-primary btn-sm">Edit</a>
+
+                        <form action="{% url 'delete_job' job.id %}" method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" onclick="return confirm('Are you sure?');" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </div>
+                {% endif %}-->
+
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% include 'paginator.html' %}
+</div>
+{% endblock %}

@@ -1,0 +1,976 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2>{{ tree.common_name }}</h2>
+
+            <p class="text-muted mb-0">{{ tree.scientific_name }}</p>
+        </div>
+
+        <div class="d-flex gap-2"> 
+            <a href="{% url 'trees:tree_profile' tree.id %}" target="_blank" class="btn btn-outline-success">
+                View Public Profile
+            </a>
+
+            <a href="{% url 'preferences' %}?section=trees" class="btn btn-outline-secondary">
+                Back
+            </a>
+        </div>
+        
+
+    </div>
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body">
+
+            <div class="d-flex justify-content-between align-items-center mb-2">
+
+                <h6 class="mb-0">
+                    Profile Completion
+                </h6>
+
+                <strong>
+                    {{ completion_percentage }}%
+                </strong>
+
+            </div>
+
+            <div class="progress" style="height:12px;">
+
+                <div class="progress-bar bg-success" role="progressbar" style="width: {{ completion_percentage }}%;"> </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Tabs -->
+
+    <ul class="nav nav-tabs" id="treeTabs">
+
+        <li class="nav-item">
+            <button class="nav-link active"
+                    data-bs-toggle="tab"
+                    data-bs-target="#physical">
+                Physical
+            </button>
+        </li>
+
+        <li class="nav-item">
+            <button class="nav-link"
+                    data-bs-toggle="tab"
+                    data-bs-target="#habitat">
+                Habitat
+            </button>
+        </li>
+
+        <li class="nav-item">
+            <button class="nav-link"
+                    data-bs-toggle="tab"
+                    data-bs-target="#conditions">
+                Growing Conditions
+            </button>
+        </li>
+
+        <li class="nav-item">
+            <button class="nav-link"
+                    data-bs-toggle="tab"
+                    data-bs-target="#ecology">
+                Ecology
+            </button>
+        </li>
+
+        <li class="nav-item">
+            <button class="nav-link"
+                    data-bs-toggle="tab"
+                    data-bs-target="#uses">
+                Uses
+            </button>
+        </li>
+
+        <li class="nav-item">
+            <button class="nav-link"
+                    data-bs-toggle="tab"
+                    data-bs-target="#threats">
+                Threats
+            </button>
+        </li>
+
+        <li class="nav-item">
+            <button class="nav-link"
+                    data-bs-toggle="tab"
+                    data-bs-target="#care">
+                Care Guide
+            </button>
+        </li>
+
+        <li class="nav-item">
+            <button class="nav-link"
+                    data-bs-toggle="tab"
+                    data-bs-target="#images">
+                Images
+            </button>
+        </li>
+
+    </ul>
+
+    <div class="tab-content border border-top-0 p-4 bg-white">
+
+        <div class="tab-pane fade show active" id="physical">
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-success alert-dismissible fade show">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">
+                        Physical Characteristics
+                    </h5>
+                </div>
+
+                <div class="card-body">
+
+                    <form method="POST">
+
+                        {% csrf_token %}
+
+                        <input
+                            type="hidden"
+                            name="form_type"
+                            value="physical">
+
+                        <div class="row">
+
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label fw-semibold">
+                                    Average Height (m)
+                                </label>
+                                {{ physical_form.average_height_m }}
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label fw-semibold">
+                                    Canopy Spread (m)
+                                </label>
+                                {{ physical_form.canopy_spread_m }}
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label fw-semibold">
+                                    Trunk Diameter (cm)
+                                </label>
+                                {{ physical_form.trunk_diameter_cm }}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold">
+                                    Growth Rate
+                                </label>
+                                {{ physical_form.growth_rate }}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold">
+                                    Lifespan (Years)
+                                </label>
+                                {{ physical_form.lifespan_years }}
+                            </div>
+
+                        </div>
+
+                        <hr>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">
+                                Leaf Description
+                            </label>
+                            {{ physical_form.leaf_description }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">
+                                Bark Description
+                            </label>
+                            {{ physical_form.bark_description }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">
+                                Flower Description
+                            </label>
+                            {{ physical_form.flower_description }}
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">
+                                Fruit Description
+                            </label>
+                            {{ physical_form.fruit_description }}
+                        </div>
+
+                        <div class="text-end">
+                            <button type="submit"
+                                    class="btn btn-success">
+                                Save Physical Characteristics
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="tab-pane fade" id="habitat">
+
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        Habitat Information
+                    </h5>
+                </div>
+
+                <div class="card-body">
+
+                    <form method="POST">
+
+                        {% csrf_token %}
+                        <input type="hidden"
+                            name="form_type"
+                            value="habitat">
+
+                        <div class="row">
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold">
+                                    Preferred Climate
+                                </label>
+                                {{ habitat_form.preferred_climate }}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold">
+                                    Hardiness Zone
+                                </label>
+                                {{ habitat_form.hardiness_zone }}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold">
+                                    Minimum Elevation (m)
+                                </label>
+                                {{ habitat_form.elevation_min_m }}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold">
+                                    Maximum Elevation (m)
+                                </label>
+                                {{ habitat_form.elevation_max_m }}
+                            </div>
+
+                        </div>
+
+                        <hr>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">
+                                Native Range
+                            </label>
+                            {{ habitat_form.native_range }}
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">
+                                Introduced Regions
+                            </label>
+                            {{ habitat_form.introduced_regions }}
+                        </div>
+
+                        <div class="text-end">
+                            <button type="submit"
+                                    class="btn btn-primary">
+                                Save Habitat Information
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="tab-pane fade" id="conditions">
+
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-warning">
+                    <h5 class="mb-0">
+                        Growing Conditions
+                    </h5>
+                </div>
+
+                <div class="card-body">
+
+                    <form method="POST">
+
+                        {% csrf_token %}
+                        <input type="hidden"
+                            name="form_type"
+                            value="conditions">
+
+                        <div class="row">
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Sunlight</label>
+                                {{ conditions_form.sunlight }}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Soil Type</label>
+                                {{ conditions_form.soil_type }}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Soil pH</label>
+                                {{ conditions_form.soil_ph }}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Water Requirements</label>
+                                {{ conditions_form.water_requirements }}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Drought Tolerance</label>
+                                {{ conditions_form.drought_tolerance }}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Frost Tolerance</label>
+                                {{ conditions_form.frost_tolerance }}
+                            </div>
+
+                        </div>
+
+                        <div class="text-end">
+                            <button class="btn btn-warning">
+                                Save Growing Conditions
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="tab-pane fade" id="ecology">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">
+                        Ecological Importance
+                    </h5>
+                </div>
+
+                <div class="card-body">
+
+                    <form method="POST">
+
+                        {% csrf_token %}
+                        <input type="hidden"
+                            name="form_type"
+                            value="ecology">
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">
+                                Carbon Sequestration
+                            </label>
+                            {{ ecology_form.carbon_sequestration }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">
+                                Wildlife Supported
+                            </label>
+                            {{ ecology_form.wildlife_supported }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">
+                                Pollinators Attracted
+                            </label>
+                            {{ ecology_form.pollinators_attracted }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">
+                                Soil Benefits
+                            </label>
+                            {{ ecology_form.soil_benefits }}
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">
+                                Ecosystem Role
+                            </label>
+                            {{ ecology_form.ecosystem_role }}
+                        </div>
+
+                        <div class="text-end">
+                            <button class="btn btn-success">
+                                Save Ecology Information
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="tab-pane fade" id="uses">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">
+                        Tree Uses
+                    </h5>
+                </div>
+
+                <div class="card-body">
+
+                    <form method="POST">
+
+                        {% csrf_token %}
+                        <input type="hidden"
+                            name="form_type"
+                            value="uses">
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">
+                                Timber Uses
+                            </label>
+                            {{ uses_form.timber }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">
+                                Landscaping Uses
+                            </label>
+                            {{ uses_form.landscaping }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">
+                                Medicinal Uses
+                            </label>
+                            {{ uses_form.medicinal }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">
+                                Cultural Uses
+                            </label>
+                            {{ uses_form.cultural }}
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">
+                                Food Uses
+                            </label>
+                            {{ uses_form.food }}
+                        </div>
+
+                        <div class="text-end">
+                            <button class="btn btn-info text-white">
+                                Save Uses
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="tab-pane fade" id="care">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">
+                        Care Guide
+                    </h5>
+                </div>
+
+                <div class="card-body">
+
+                    <form method="POST">
+
+                        {% csrf_token %}
+                        <input type="hidden"
+                            name="form_type"
+                            value="care">
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">
+                                Pruning Requirements
+                            </label>
+                            {{ care_form.pruning_requirements }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">
+                                Fertilization
+                            </label>
+                            {{ care_form.fertilization }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">
+                                Watering Schedule
+                            </label>
+                            {{ care_form.watering_schedule }}
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">
+                                Planting Time
+                            </label>
+                            {{ care_form.planting_time }}
+                        </div>
+
+                        <div class="text-end">
+                            <button class="btn btn-secondary">
+                                Save Care Guide
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="tab-pane fade" id="threats">
+
+            <div class="row">
+
+                <div class="col-md-5">
+
+                    <div class="card shadow-sm border-0">
+
+                        <div class="card-header bg-danger text-white">
+                            <h5 class="mb-0">
+                                Add Threat
+                            </h5>
+                        </div>
+
+                        <div class="card-body">
+
+                            <form method="POST">
+
+                                {% csrf_token %}
+
+                                <input type="hidden"
+                                    name="form_type"
+                                    value="threat">
+
+                                <div class="mb-3">
+                                    <label class="form-label">
+                                        Threat Name
+                                    </label>
+
+                                    {{ threat_form.name }}
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">
+                                        Threat Type
+                                    </label>
+
+                                    {{ threat_form.threat_type }}
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">
+                                        Description
+                                    </label>
+
+                                    {{ threat_form.description }}
+                                </div>
+
+                                <button class="btn btn-danger">
+                                    Add Threat
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-7">
+
+                    <div class="card shadow-sm border-0">
+
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                Existing Threats
+                            </h5>
+                        </div>
+
+                        <div class="card-body">
+
+                            {% if threats %}
+
+                                <table class="table">
+
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+
+                                        {% for threat in threats %}
+
+                                            <tr>
+
+                                                <td>
+                                                    {{ threat.name }}
+                                                </td>
+
+                                                <td>
+                                                    {{ threat.get_threat_type_display }}
+                                                </td>
+
+                                            </tr>
+
+                                        {% endfor %}
+
+                                    </tbody>
+
+                                </table>
+
+                            {% else %}
+
+                                <p class="text-muted mb-0">
+                                    No threats recorded.
+                                </p>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="tab-pane fade" id="images">
+
+            <div class="row">
+
+                <div class="col-md-4">
+
+                    <div class="card shadow-sm border-0">
+
+                        <div class="card-header bg-success text-white">
+                            Upload Image
+                        </div>
+
+                        <div class="card-body">
+
+                            <form
+                                id="imageUploadForm"
+                                method="POST"
+                                enctype="multipart/form-data"
+                                action="{% url 'ajax_upload_image' tree.id %}">
+
+                                {% csrf_token %}
+
+                                <input
+                                    type="hidden"
+                                    name="form_type"
+                                    value="image">
+
+                                {{ image_form.as_p }}
+
+                                <div class="progress mb-3 d-none" id="uploadProgress">
+
+                                    <div class="progress-bar progress-bar-striped progress-bar-animated"
+                                        role="progressbar"
+                                        style="width:0%">
+
+                                        0%
+
+                                    </div>
+
+                                </div>
+
+                                <button
+                                    class="btn btn-success w-100">
+
+                                    Upload Image
+
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-8">
+
+                    <div class="row">
+
+                        {% for image in images %}
+
+                        <div class="col-md-4 mb-3">
+
+                            <div class="card image-card h-100 shadow-sm">
+
+                                <img
+                                    src="{{ image.image.url }}"
+                                    class="card-img-top gallery-image"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#imageModal"
+                                    data-image="{{ image.image.url }}"
+                                    style="height:200px;object-fit:cover;cursor:pointer;">
+
+                                <div class="card-body">
+
+                                    <span class="badge bg-success">
+                                        {{ image.get_image_type_display }}
+                                    </span>
+
+                                    {% if image.caption %}
+                                        <p class="mt-2 mb-3">
+                                            {{ image.caption }}
+                                        </p>
+                                    {% endif %}
+
+                                    <a href="{% url 'delete_tree_image' image.id %}"
+                                    class="btn btn-danger btn-sm w-100"
+                                    onclick="return confirm('Delete this image?');">
+
+                                        Delete Image
+
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        {% empty %}
+
+                        <div class="col-12">
+
+                            <div class="alert alert-light border text-center">
+
+                                <i class="bi bi-images fs-1 d-block mb-2"></i>
+
+                                No images uploaded yet.
+
+                            </div>
+
+                        </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="modal fade"
+                id="imageModal"
+                tabindex="-1">
+
+                <div class="modal-dialog modal-xl">
+
+                    <div class="modal-content">
+
+                        <div class="modal-body p-0">
+
+                            <img
+                                id="modalImage"
+                                src=""
+                                class="img-fluid w-100">
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+
+
+    document
+    .getElementById("imageUploadForm")
+    .addEventListener(
+        "submit",
+        function(e){
+
+            e.preventDefault();
+
+            const form = this;
+
+            const progress =
+                document.getElementById(
+                    "uploadProgress"
+                );
+
+            const bar =
+                progress.querySelector(
+                    ".progress-bar"
+                );
+
+            progress.classList.remove(
+                "d-none"
+            );
+
+            const formData =
+                new FormData(form);
+
+            const xhr =
+                new XMLHttpRequest();
+
+            xhr.open(
+                "POST",
+                form.action,
+                true
+            );
+
+            xhr.setRequestHeader(
+                "X-CSRFToken",
+                document.querySelector(
+                    "[name=csrfmiddlewaretoken]"
+                ).value
+            );
+
+            xhr.upload.addEventListener(
+                "progress",
+                function(e){
+
+                    if(e.lengthComputable){
+
+                        const percent =
+                            Math.round(
+                                (e.loaded / e.total)
+                                * 100
+                            );
+
+                        bar.style.width =
+                            percent + "%";
+
+                        bar.innerText =
+                            percent + "%";
+
+                    }
+
+                }
+            );
+
+            xhr.onload = function(){
+
+                if(xhr.status === 200){
+
+                    const response =
+                        JSON.parse(
+                            xhr.responseText
+                        );
+
+                    if(response.success){
+
+                        bar.classList.remove(
+                            "progress-bar-animated"
+                        );
+
+                        bar.innerText =
+                            "Upload Complete";
+
+                        setTimeout(
+                            function(){
+                                location.reload();
+                            },
+                            1000
+                        );
+                    }
+                }
+
+            };
+
+            xhr.send(formData);
+
+        }
+    );
+
+
+
+    document.querySelectorAll( ".gallery-image").forEach(function(img){
+
+        img.addEventListener(
+            "click",
+            function(){
+
+                document.getElementById(
+                    "modalImage"
+                ).src =
+                    this.dataset.image;
+
+            }
+        );
+
+    });
+</script>
+
+{% endblock %}

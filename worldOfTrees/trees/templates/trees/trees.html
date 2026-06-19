@@ -1,0 +1,266 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+<div class="container py-4">
+
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <form method="GET">
+                <div class="row g-3">
+                    <!-- Search -->
+                    <div class="col-md-4">
+                        <input type="text" name="search" class="form-control" placeholder="Search trees..." value="{{ search }}">
+                    </div>
+
+                    <!-- Tree Type -->
+                    <div class="col-md-2">
+                        <select name="tree_type" class="form-select">
+                            <option value="">
+                                All Types
+                            </option>
+                            <option value="deciduous"
+                                {% if tree_type == "deciduous" %}selected{% endif %}>
+                                Deciduous
+                            </option>
+                            <option value="evergreen"
+                                {% if tree_type == "evergreen" %}selected{% endif %}>
+                                Evergreen
+                            </option>
+                            <option value="conifer"
+                                {% if tree_type == "conifer" %}selected{% endif %}>
+                                Conifer
+                            </option>
+                        </select>
+                    </div>
+
+                    <!-- Conservation -->
+                    <div class="col-md-2">
+                        <select name="status" class="form-select">
+                            <option value="">
+                                All Statuses
+                            </option>
+
+                            <option value="LC" {% if status == "LC" %}selected{% endif %}>
+                                Least Concern
+                            </option>
+
+                            <option value="NT" {% if status == "NT" %}selected{% endif %}>
+                                Near Threatened
+                            </option>
+
+                            <option value="VU" {% if status == "VU" %}selected{% endif %}>
+                                Vulnerable
+                            </option>
+
+                            <option value="EN" {% if status == "EN" %}selected{% endif %}>
+                                Endangered
+                            </option>
+
+                            <option value="CR" {% if status == "CR" %}selected{% endif %}>
+                                Critical
+                            </option>
+
+                        </select>
+                    </div>
+
+                    <!-- Sort -->
+                    <div class="col-md-2">
+                        <select name="sort" class="form-select">
+
+                            <option value="name_asc" {% if sort == "name_asc" %}selected{% endif %}>
+                                Name (A-Z)
+                            </option>
+
+                            <option value="name_desc" {% if sort == "name_desc" %}selected{% endif %}>
+                                Name (Z-A)
+                            </option>
+
+                            <option value="newest" {% if sort == "newest" %}selected{% endif %}>
+                                Newest Added
+                            </option>
+
+                            <option value="oldest" {% if sort == "oldest" %}selected{% endif %}>
+                                Oldest Added
+                            </option>
+
+                        </select>
+                    </div>
+
+                    <!-- Filter Button -->
+                    <div class="col-md-1">
+                        <button class="btn btn-success w-100">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+
+                    <!--Reset Button-->
+                    <div class="col-md-1">
+                        <a href="{% url 'trees:trees' %}" class="btn btn-outline-secondary w-100">
+                            <i class="bi bi-arrow-clockwise"></i>
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="mb-3 d-flex justify-content-end">
+
+        <a class="badge text-bg-light text-decoration-none me-2">
+            {{ trees.paginator.count }} Trees Found
+        </a>
+
+        <a href="?status=CR" class="badge bg-danger text-decoration-none me-2">
+            Critically Endangered
+        </a>
+
+        <a href="?status=EN" class="badge bg-warning text-dark text-decoration-none me-2">
+            Endangered
+        </a>
+
+        <a href="?tree_type=evergreen" class="badge bg-success text-decoration-none me-2">
+            Evergreen
+        </a>
+
+        <a href="?tree_type=conifer" class="badge bg-primary text-decoration-none">
+            Conifer
+        </a>
+    </div>
+
+    <div class="row mb-4  d-flex justify-content-end">
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0">
+                <div class="card-body text-center">
+                    <h3 class="text-success">
+                        {{ trees.paginator.count }} 
+                    </h3>
+
+                    <small class="text-muted">
+                        Trees Found
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4" id="tree-grid">
+        {% include "trees/partials/tree_cards.html" %}
+    </div>
+
+    <div id="loading" class="text-center py-4 d-none">
+        <div class="spinner-border text-success"></div>
+    </div>
+
+</div>
+
+
+<script>
+(() => {
+
+    let page = 1;
+    let loading = false;
+    let hasNext = true;
+    let lastQuery = window.location.search;
+
+    const grid = document.getElementById("tree-grid");
+    const loader = document.getElementById("loading");
+
+    function reset() {
+        page = 1;
+        hasNext = true;
+        loading = false;
+        grid.innerHTML = "";
+    }
+
+    function showLoader() {
+        loader.classList.remove("d-none");
+    }
+
+    function hideLoader() {
+        loader.classList.add("d-none");
+    }
+
+    function getExistingIds() {
+        return new Set(
+            Array.from(document.querySelectorAll("[data-id]"))
+                .map(el => el.dataset.id)
+        );
+    }
+
+    async function loadMore() {
+
+        if (loading || !hasNext) return;
+
+        const currentQuery = window.location.search;
+
+        // 🔥 RESET ON FILTER CHANGE
+        if (currentQuery !== lastQuery) {
+            reset();
+            lastQuery = currentQuery;
+        }
+
+        loading = true;
+        showLoader();
+
+        try {
+
+            const params = new URLSearchParams(window.location.search);
+            params.set("page", page);
+
+            const res = await fetch(
+                `${window.location.pathname}?${params.toString()}`,
+                {
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest"
+                    }
+                }
+            );
+
+            const data = await res.json();
+
+            if (!data.html) {
+                hasNext = false;
+                return;
+            }
+
+            // 🔥 FRONTEND DEDUPE SAFETY LAYER
+            const existingIds = getExistingIds();
+
+            const temp = document.createElement("div");
+            temp.innerHTML = data.html;
+
+            Array.from(temp.children).forEach(node => {
+                const id = node.getAttribute("data-id");
+
+                if (!existingIds.has(id)) {
+                    grid.appendChild(node);
+                    existingIds.add(id);
+                }
+            });
+
+            hasNext = data.has_next;
+            page++;
+
+        } catch (err) {
+            console.error("Infinite scroll error:", err);
+        } finally {
+            loading = false;
+            hideLoader();
+        }
+    }
+
+    window.addEventListener("scroll", () => {
+
+        if (loading || !hasNext) return;
+
+        if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
+            loadMore();
+        }
+
+    });
+
+})();
+</script>
+{% endblock %}

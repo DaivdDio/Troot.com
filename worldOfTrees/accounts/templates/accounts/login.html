@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<section class="mt-50 mb-100 pt-1 bg-upload">
+<div class="container mt-5" style="max-width: 400px;">
+    <div class="row justify-content-center">
+        <div id="login-section" class="col-12 bg-light p-5 rounded shadow">
+            <div class="contact-form">
+
+                <!-- Back Button -->
+                <div class="mb-3">
+                    <button onclick="history.back()" class="btn btn-outline-secondary btn-sm">← Back</button>
+                </div>
+
+                <!-- LOGIN SECTION -->
+                <div class="section-heading text-center">
+                    <h3>Login</h3>
+                    <hr>
+                    <p>Please Enter Account Details.</p>
+                </div>
+
+                <form method="post" action="{% url 'accounts:login' %}">
+                    {% csrf_token %}
+                    <div class="input-group mb-3">
+                        <input type="text" name="username" class="form-control" placeholder="Username" required>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="password" name="password" class="form-control" placeholder="Password" required>
+                    </div>
+                    <div class="mb-3 text-center">
+                        <button type="submit" class="btn btn-primary w-100">Login</button>
+                    </div>
+                    <div class="text-center mt-3">
+                        <button type="button" class="btn btn-link" onclick="showRegister()">
+                            Don't have an account? Register
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div id="register-section" class="col-12 bg-light p-5 rounded shadow" style="display: none;">
+            <div class="contact-form">
+
+                <!-- Back Button -->
+                <div class="mb-3">
+                    <button onclick="history.back()" class="btn btn-outline-secondary btn-sm">← Back</button>
+                </div>
+                <!-- REGISTRATION SECTION -->
+                <div class="section-heading text-center">
+                    <h3>Register</h3>
+                    <hr>
+                    <p>Create a new account.</p>
+                </div>
+
+                <form method="post" action="{% url 'accounts:register' %}">
+                    {% csrf_token %}
+                    
+                    <div class="input-group mb-3">
+                        <input type="text" name="username" class="form-control" placeholder="Username" required>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <input type="email" name="email" class="form-control" placeholder="Email" required>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <input type="password" name="password1" class="form-control" placeholder="Password" required>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <input type="password" name="password2" class="form-control" placeholder="Confirm Password" required>
+                    </div>
+
+                    <div class="mb-3 text-center">
+                        <button type="submit" class="btn btn-success w-100">Register</button>
+                    </div>
+                    <div class="text-center mt-3">
+                        <button type="button" class="btn btn-link" onclick="showLogin()">
+                            Already have an account? Login
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+</section>
+
+<script>
+    function showRegister() {
+        document.getElementById("login-section").style.display = "none";
+        document.getElementById("register-section").style.display = "block";
+    }
+
+    function showLogin() {
+        document.getElementById("register-section").style.display = "none";
+        document.getElementById("login-section").style.display = "block";
+    }
+</script>
+
+{% endblock %}

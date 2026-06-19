@@ -1,0 +1,193 @@
+body, h1, h2, h3, h4, h5, h6 {
+    font-family: 'Manrope', sans-serif !important;
+}
+
+/*footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}*/
+
+
+.home-body{
+    background-image: linear-gradient(to bottom, rgba(92, 77, 66, 0.6) 50%, rgba(92, 77, 66, 0.0) 100%), url("../assets/img/Home_BG.jpg");
+    min-height: 100dvh;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    /*padding-top: 10rem;*/
+    padding-bottom: calc(10rem - 4.5rem);
+}
+
+.bg-upload{
+    background-image: linear-gradient(to bottom, rgba(92, 77, 66, 0.0) 50%, rgba(92, 77, 66, 0.0) 100%), url("../assets/img/bg-03.jpg");
+    min-height: 100dvh;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    /*padding-top: 10rem;*/
+    padding-bottom: calc(10rem - 4.5rem);
+}
+
+@media (min-width: 992px) {
+  header.home-body {
+    min-height: 100dvh;
+    padding-top: 4.5rem;
+    padding-bottom: 0;
+  }
+
+  header.home-body p {
+    font-size: 1.15rem;
+  }
+  header.home-body h1, header.home-body .h1 {
+    font-size: 3rem;
+  }
+}
+@media (min-width: 1200px) {
+  header.home-body h1, header.home-body .h1 {
+    font-size: 3.5rem;
+  }
+}
+
+
+
+/*IMPORTANT BOOTSTRAP*/
+
+.card-img-overlay {
+    background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.7) 0%,   /* dark at bottom */
+        rgba(0, 0, 0, 0.4) 20%,
+        rgba(0, 0, 0, 0.0) 100%  /* transparent at top */
+    );
+    border-radius: inherit;
+}
+
+.image-wrapper {
+    height: 100%;
+   /* min-height: 400px;*/
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.image-wrapper:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+.transition {
+    transition: all 0.3s ease;
+}
+.transition:hover {
+    transform: translateY(-3px);
+}
+
+
+.feature-text {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    margin: 0;
+    transition: all 0.4s ease;
+}
+
+.feature-item:hover .feature-text {
+    max-height: 200px; /* enough to fit your text */
+    opacity: 1;
+    margin-top: 8px;
+}
+
+/*.feature-item {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}*/
+
+.feature-item:hover {
+    transform: translateY(-4px);
+}
+
+
+.feature-item {
+    flex-wrap: wrap;
+}
+
+.feature-item .icon {
+    flex-shrink: 0;
+}
+
+/* Icon styling */
+.feature-item .icon svg {
+    width: 18px;
+    height: 18px;
+    transition: transform 0.3s ease;
+}
+
+/* Rotate icon on hover */
+.feature-item:hover .icon svg {
+    transform: rotate(180deg);
+}
+
+.feature-item h5 {
+    margin-bottom: 0; /* removes space when paragraph is hidden */
+}
+
+/* paragraph full width below */
+.feature-text {
+    width: 100%;
+    margin-top: 0;
+}
+
+/*-----------------------*/
+
+.feature-image {
+    background-image: url("{% static '/assets/img/moss.jpg' %}");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100%;
+    max-height: 400px;
+    overflow: hidden;
+}
+
+.feature-image img {
+    max-height: 400px;  /* adjust to taste */
+    object-fit: cover;
+}
+
+
+
+/*--------------------MEDIA------------------------*/
+
+.carousel .card {
+    width: 18rem;
+    flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+    .carousel .card {
+        width: 100%;
+    }
+}
+
+/*---------PAGINATION----------------------*/
+
+/* Default buttons */
+/* Pagination color override */
+.pagination .page-link {
+    color: #000; /* text color */
+    border: 1px solid #000;
+}
+
+/* Hover effect */
+.pagination .page-link:hover {
+    background-color: #E9EAEC;
+    color: #000;
+}
+
+/* Active page */
+.pagination .page-item.active .page-link {
+    background-color: #E9EAEC;
+    border-color: #000;
+    color: #000;
+}

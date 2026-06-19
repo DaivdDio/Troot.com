@@ -1,0 +1,354 @@
+{% load static %}
+{% load heroicons %}
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Troot.com</title>
+    <!-- Google fonts-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet">
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+    <!--pip install heroicons-->
+    <!--Bootstrap icons-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+  </head>
+  <body>
+
+    <header class="home-body">
+        <div class="container">
+            <nav class="shadow navbar navbar-expand-lg bg-body-tertiary rounded">
+                <div class="container-fluid">
+                    <a class="navbar-brand px-2" href="#" style="font-weight: bold;">TROOT</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse fs-5" id="navbarNav">
+                        <ul class="navbar-nav mx-auto">
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="#">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'trees:trees' %}">Trees</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'job_list' %}">Career Path</a>
+                            </li>
+                        </ul>
+                        <ul class="navbar-nav d-flex">
+                            <li class="nav-item">
+                                
+                                {% if user.is_authenticated %}
+                                    <a class="nav-link active" style="font-weight: bold;" aria-current="page" href="{% url 'accounts:logout' %}">Logout</a>
+                                {% else %}
+                                    <a class="nav-link active" style="font-weight: bold;" aria-current="page" href="{% url 'accounts:login' %}">Login</a>
+                                {% endif %}
+                            </li>
+                            <!--<li class="nav-item">
+                                <span class="nav-link disabled">|</span>
+                            </li>-->
+                            {% if user.is_authenticated %}
+                            <li class="nav-item dropdown">
+                                <a class="nav-link d-flex align-items-center dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                    <span class="text-muted me-2">|</span>
+                                    {% heroicon_outline "cog-8-tooth" size=25 %}
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#">Profile</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'preferences' %}">Settings</a></li>
+                                </ul>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <div class="pt-5 pb-3 text-center text-white">
+                <h1>BUILDING GROWTH,<br> ONE BRANCH AT A TIME.</h1>
+            </div>
+            <div class="text-center text-white">
+                <p class="">I created Troot as a platform to store and share information about different tree species, 
+                    helping people learn about their features, uses, and care while supporting conservation. 
+                    It also allows users to explore and contribute knowledge, 
+                    making it a growing resource for tree enthusiasts and researchers alike.
+                </p>
+            </div>
+            <div class="pt-4">
+                <ul class="pt-4 list-group list-group-horizontal-lg d-flex justify-content-center gap-2 gap-lg-5">
+                    <li class="list-group-item rounded-pill bg-dark text-white opacity-75 border-0 text-center">Education</li>
+                    <li class="list-group-item rounded-pill bg-dark text-white opacity-75 border-0 text-center">Conservation</li>
+                    <li class="list-group-item rounded-pill bg-dark text-white opacity-75 border-0 text-center">Collaboration</li>
+                </ul>
+            </div>
+
+        </div>
+    </header>
+
+    <section style="background: linear-gradient(135deg, #F5F5F5, #ffffff);" class="py-3">
+        <div class="container-xxl pb-0 pb-lg-5">
+            <div class="pt-5 pb-3 text-center justify-content-center">
+                <a href="#" class="btn btn-dark text-center text-white px-5 rounded-pill opacity-75">About Troot</a>
+            </div>
+            <div class="pt-1 pb-3 px-3 px-lg-5 text-center">
+                <h3 class="px-2 px-lg-5 display-6 display-lg-5">
+                    <strong>
+                    Troot is a tree repository platform that allows users to explore, learn about, 
+                    and share information on different tree species. It serves as a growing hub for knowledge, 
+                    promoting education, collaboration, and environmental conservation.
+                    </strong>
+                </h3>
+            </div>
+            <div class="pt-4">
+                <ul class="pt-4 list-group list-group-horizontal-lg d-flex justify-content-center gap-2 gap-lg-5 transparent">
+                    <li class="list-group-item text-black opacity-75 border-0 text-center bg-transparent">
+                        {% heroicon_outline "check-badge" size=50 class="mr-4" %}<br>
+                        <p>Verified Impact.<br> Not just Promises.</p>
+                    </li>
+                    <li class="list-group-item text-black opacity-75 border-0 text-center bg-transparent">
+                        {% heroicon_outline "light-bulb" size=50 class="mr-4" %}<br>
+                        <p>Tools for Growth.<br> Support to Scale</p>
+                    </li>
+                    <li class="list-group-item text-black opacity-75 border-0 text-center bg-transparent">
+                        {% heroicon_outline "device-phone-mobile" size=50 class="mr-4" %}<br>
+                        <p>Easy Access<br> from Anywhere</p>
+                    </li>
+                    <li class="list-group-item text-black opacity-75 border-0 text-center bg-transparent">
+                        {% heroicon_outline "arrows-pointing-in" size=50 class="mr-4" %}<br>
+                        <p>A Collaborative<br> Ecosystem</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="container text-center pb-4">
+            <div class="row justify-content-center gap-5 gap-lg-0 align-items-stretch">
+                
+                <div class="col-auto">
+                    <div class="card mt-5 shadow rounded-4 border border-secondary-subtle" style="width: 18rem; height: 350px; overflow: hidden;">
+                        
+                        <img src="{% static '/assets/img/Home-Tree-01.jpg' %}" 
+                            class="card-img h-100 object-fit-cover" 
+                            alt="...">
+
+                        <div class="card-img-overlay d-flex flex-column justify-content-end text-white">
+                            <h5 class="card-title">Card title</h5>
+                            <p class="card-text">This is a wider card with supporting text.</p>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-auto">
+                    <div class="card mt-0 shadow rounded-4 border border-secondary-subtle" style="width: 18rem; height: 350px; overflow: hidden;">
+                        
+                        <img src="{% static '/assets/img/Home-Tree-02.jpg' %}" 
+                            class="card-img h-100 object-fit-cover" 
+                            alt="...">
+
+                        <div class="card-img-overlay d-flex flex-column justify-content-end text-white">
+                            <h5 class="card-title">Card title</h5>
+                            <p class="card-text">This is a wider card with supporting text.</p>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section style="background: linear-gradient(10deg, #D3D3D3, #FFF5EE);" class="py-5">
+        <div class="container">
+            <div class="pb-2">
+                <a href="#" class="btn btn-light text-center px-5 rounded-pill opacity-75">
+                    <small>Why Choose Us?</small>
+                </a>
+            </div>
+            <h3 class="pt-3 fw-semibold">
+                What makes us ideal for your source<br> of knowledge?
+            </h3><br>
+            
+            <div class="row align-items-center g-2">
+    
+                <div class="col-12 col-lg-6 d-flex align-items-center">
+                    <ul class="list-group gap-2 w-100">
+                        <li class="list-group-item rounded shadow-sm transition feature-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="mb-0">
+                                    Comprehensive Tree Database
+                                    <span class="icon">
+                                        {% heroicon_outline "chevron-down" %}
+                                    </span>
+                                </h5>
+                                <p class="feature-text w-100">
+                                    Access a wide range of tree species with detailed and well-organized information.
+                                </p>
+                            </div>
+                        </li>
+                        <li class="list-group-item rounded shadow-sm transition feature-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="mb-0">
+                                    Reliable Information
+                                    <span class="icon">
+                                        {% heroicon_outline "chevron-down" %}
+                                    </span>
+                                </h5>
+                                <p class="feature-text w-100">
+                                    All content is curated to ensure accuracy and practical value for users.
+                                </p>
+                            </div>
+                        </li>
+                        <li class="list-group-item rounded shadow-sm transition feature-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="mb-0">
+                                    Easy Exploration
+                                    <span class="icon">
+                                        {% heroicon_outline "chevron-down" %}
+                                    </span>
+                                </h5>
+                                <p class="feature-text w-100">
+                                    Navigate and discover trees effortlessly through a simple and user-friendly interface.
+                                </p>
+                            </div>
+                        </li>
+                        <li class="list-group-item rounded shadow-sm transition feature-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="mb-0">
+                                    Community Contributions
+                                    <span class="icon">
+                                        {% heroicon_outline "chevron-down" %}
+                                    </span>
+                                </h5>
+                                <p class="feature-text w-100">
+                                    Users can share knowledge and insights, helping the platform grow continuously.
+                                </p>
+                            </div>
+                        </li>
+                        <li class="list-group-item rounded shadow-sm transition feature-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="mb-0">
+                                    Environmental Awareness
+                                    <span class="icon">
+                                        {% heroicon_outline "chevron-down" %}
+                                    </span>
+                                </h5>
+                                <p class="feature-text w-100">
+                                    Promotes understanding and appreciation of trees to support conservation efforts.
+                                </p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="col-12 col-lg-6 feature-image rounded">
+                    <div class="w-100 h-100">
+                        <img src="{% static '/assets/img/moss.jpg' %}" 
+                            class="w-100 h-100 object-fit-cover rounded" 
+                            alt="...">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section style="background: linear-gradient(170deg, #D3D3D3, #FFF5EE);" class="py-3">
+        <div class="container">
+            <div class="pb-2 text-center">
+                <a href="#" class="btn btn-light px-5 rounded-pill opacity-75">
+                    <small>Why Choose Us?</small>
+                </a>
+            </div>
+            <h2 class="pt-3 fw-semibold text-center">
+                Featured Professions
+            </h2><br>
+
+            <p class="text-center">
+                Discover traditional and innovative jobs that are making a real difference<br>in sustainability and environmental impact.
+            </p>
+        </div>
+        <!--CAROUSEL CARDS-->
+        <div class="container pb-4">
+            <div id="cardCarousel" class="carousel slide" data-bs-ride="carousel">
+                
+                <div class="carousel-inner">
+
+                    <!-- Slide 1 -->
+                    <div class="carousel-item active">
+                        <div class="d-flex justify-content-center gap-4 flex-wrap flex-md-nowrap">
+
+                            <!-- Card -->
+                            <div class="card shadow rounded-4 border border-secondary-subtle" style="width: 18rem; height: 350px; overflow: hidden;">
+                                <img src="{% static '/assets/img/Home-Tree-01.jpg' %}" class="card-img h-100 object-fit-cover">
+                                <div class="card-img-overlay d-flex flex-column justify-content-end text-white">
+                                    <h5 class="card-title">Card 1</h5>
+                                </div>
+                            </div>
+
+                            <div class="card shadow rounded-4 border border-secondary-subtle" style="width: 18rem; height: 350px; overflow: hidden;">
+                                <img src="{% static '/assets/img/Home-Tree-02.jpg' %}" class="card-img h-100 object-fit-cover">
+                                <div class="card-img-overlay d-flex flex-column justify-content-end text-white">
+                                    <h5 class="card-title">Card 2</h5>
+                                </div>
+                            </div>
+
+                            <div class="card shadow rounded-4 border border-secondary-subtle" style="width: 18rem; height: 350px; overflow: hidden;">
+                                <img src="{% static '/assets/img/Home-Tree-03.jpg' %}" class="card-img h-100 object-fit-cover">
+                                <div class="card-img-overlay d-flex flex-column justify-content-end text-white">
+                                    <h5 class="card-title">Card 3</h5>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Slide 2 -->
+                    <div class="carousel-item">
+                        <div class="d-flex justify-content-center gap-4 flex-wrap flex-md-nowrap">
+
+                            <div class="card shadow rounded-4 border border-secondary-subtle" style="width: 18rem; height: 350px; overflow: hidden;">
+                                <img src="{% static '/assets/img/Home-Tree-04.jpg' %}" class="card-img h-100 object-fit-cover">
+                                <div class="card-img-overlay d-flex flex-column justify-content-end text-white">
+                                    <h5 class="card-title">Card 4</h5>
+                                </div>
+                            </div>
+
+                            <div class="card shadow rounded-4 border border-secondary-subtle" style="width: 18rem; height: 350px; overflow: hidden;">
+                                <img src="{% static '/assets/img/Home-Tree-05.jpg' %}" class="card-img h-100 object-fit-cover">
+                                <div class="card-img-overlay d-flex flex-column justify-content-end text-white">
+                                    <h5 class="card-title">Card 5</h5>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Controls -->
+                <button class="carousel-control-prev" type="button" data-bs-target="#cardCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                </button>
+
+                <button class="carousel-control-next" type="button" data-bs-target="#cardCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                </button>
+
+            </div>
+        </div>
+    </section>
+
+    <footer style="background: linear-gradient(0deg, #D3D3D3, #FFF5EE);" class="bg-light py-3">
+        <div class="container px-4 px-lg-5" style="font-weight: bold;"><div class="small text-center text-muted">Copyright &copy; 2000 - 2026 Troot. All Rights Reserved.</div></div>
+    </footer>
+
+    
+    
+    
+  </body>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+</html>

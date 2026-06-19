@@ -1,0 +1,8 @@
+<h2>Delete Profession</h2>
+<p>Are you sure you want to delete "{{ job.title }}"?</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Yes, delete</button>
+    <a href="{% url 'job_list' %}">Cancel</a>
+</form>

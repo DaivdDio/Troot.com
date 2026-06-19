@@ -1,0 +1,333 @@
+{% load heroicons %}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">Trees</h2>
+
+    <div class="d-flex gap-2">
+        <!-- Search -->
+        <form method="get" class="d-flex">
+            <input type="hidden" name="section" value="trees">
+            <input type="hidden" name="view" value="{{ view_mode }}">
+
+            <div class="input-group input-group-sm">
+                <input type="text" name="search" value="{{ search }}" class="form-control" placeholder="Search Trees...">
+
+                {% if search %}
+                    <a href="?section=trees" class="btn btn-outline-secondary" title="Clear search">
+                        <!--&times;-->{% heroicon_outline "x-mark" class="w-4 h-4 me-1" %}
+                    </a>
+                {% endif %}
+
+                <button class="btn btn-outline-secondary">Search</button>
+            </div>
+        </form>
+
+        <div class="d-flex gap-2">
+
+            <!-- List View -->
+            <a href="?section=trees&view=list{% if search %}&search={{ search }}{% endif %}"
+            class="btn btn-sm {% if view_mode == 'list' %}btn-primary{% else %}btn-outline-secondary{% endif %}"
+            title="List View">
+                {% heroicon_outline "list-bullet" class="w-4 h-4" %}
+            </a>
+
+            <!-- Grid View -->
+            <a href="?section=trees&view=grid{% if search %}&search={{ search }}{% endif %}"
+            class="btn btn-sm {% if view_mode == 'grid' %}btn-primary{% else %}btn-outline-secondary{% endif %}"
+            title="Grid View">
+                {% heroicon_outline "squares-2x2" class="w-4 h-4" %}
+            </a>
+
+            <!-- Edit Selected -->
+            <button id="editSelectedTree"
+                    class="btn btn-primary btn-sm"
+                    disabled
+                    title="Edit Selected">
+                {% heroicon_outline "pencil-square" class="w-4 h-4" %}
+            </button>
+
+            <!-- Delete Selected -->
+            <button id="deleteSelectedTrees"
+                    class="btn btn-danger btn-sm"
+                    disabled
+                    title="Delete Selected">
+                {% heroicon_outline "trash" class="w-4 h-4" %}
+            </button>
+
+            <!-- Add Tree -->
+            <a href="?section=trees&action=add"
+            class="btn btn-success btn-sm">
+                {% heroicon_outline "plus" class="w-4 h-4 me-1" %}
+                Add
+            </a>
+
+
+        </div>
+    </div>
+</div>
+
+    
+
+    {# ================= ADD FORM ================= #}
+    {% if action == "add" %}
+    <div class="card mb-3">
+        <div class="card-body">
+
+            <h5>Add Tree</h5>
+
+            <form id="addTreeForm" action="{% url 'trees:upload_tree' %}" method="post" enctype="multipart/form-data">
+
+                {% csrf_token %}
+
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+                        <input type="text" name="common_name" class="form-control" placeholder="Common Name">
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <input type="text" name="scientific_name" class="form-control" placeholder="Scientific Name">
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <input type="text" name="family" class="form-control" placeholder="Family">
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <input type="text" name="native_region" class="form-control" placeholder="Native Region">
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <select name="tree_type" class="form-select">
+                            <option value="deciduous">Deciduous</option>
+                            <option value="evergreen">Evergreen</option>
+                            <option value="conifer">Conifer</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <select name="conservation_status" class="form-select">
+                            <option value="LC">Least Concern</option>
+                            <option value="NT">Near Threatened</option>
+                            <option value="VU">Vulnerable</option>
+                            <option value="EN">Endangered</option>
+                            <option value="CR">Critically Endangered</option>
+                        </select>
+                    </div>
+
+                    <div class="col-12 mb-3">
+                        <label class="form-label">
+                            Import Excel File (optional)
+                        </label>
+
+                        <input type="file" name="excel_file" accept=".xlsx,.xls" class="form-control">
+                    </div>
+
+                    <!--<div class="col-12 mb-3">
+                        <a href="{% url 'trees:download_tree_template' %}"
+                        class="btn btn-outline-primary btn-sm">
+                            Download Excel Template
+                        </a>
+                    </div>-->
+
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button id="treeUploadBtn" type="submit" class="btn btn-success">
+                        Save Tree
+                    </button>
+
+                    <a href="?section=trees&page={{ trees.number }}" class="btn btn-secondary">
+                        Cancel
+                    </a>
+
+                    <a href="{% url 'trees:download_tree_template' %}" class="btn btn-outline-primary">
+                        Download Excel Template
+                    </a>
+
+                    <div id="treeUploadStatus" class="mt-2"></div>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+    {% endif %}
+
+
+    {# ================= TREE LIST ================= #}
+
+    {% if view_mode == "grid" %}
+
+    <div class="row">
+
+        {% for tree in trees %}
+
+        <div class="col-md-4 mb-3">
+
+            <div class="card h-100">
+                <div class="card-body position-relative">
+
+                    {% if edit_tree and edit_tree.id == tree.id %}
+
+                        <form class="editTreeForm"
+                            action="{% url 'trees:edit_tree' tree.id %}"
+                            method="post">
+
+                            {% csrf_token %}
+
+                            <input type="text" name="common_name"
+                                value="{{ tree.common_name }}"
+                                class="form-control mb-2">
+
+                            <input type="text" name="scientific_name"
+                                value="{{ tree.scientific_name }}"
+                                class="form-control mb-2">
+
+                            <input type="text" name="family"
+                                value="{{ tree.family }}"
+                                class="form-control mb-2">
+
+                            <input type="text" name="native_region"
+                                value="{{ tree.native_region }}"
+                                class="form-control mb-2">
+
+                            <div class="d-flex gap-2 mt-2">
+                                <button type="submit" class="btn btn-success btn-sm">Save</button>
+
+                                <a href="?section=trees&view=grid"
+                                class="btn btn-secondary btn-sm">Cancel</a>
+                            </div>
+
+                        </form>
+
+                    {% else %}
+
+                        <input type="checkbox"
+                            class="form-check-input tree-checkbox position-absolute top-0 end-0 m-3"
+                            value="{{ tree.id }}">
+
+                        <h5 class="mb-1">{{ tree.common_name }}</h5>
+                        <p class="text-muted mb-1">{{ tree.scientific_name }}</p>
+                        <small class="text-muted d-block">{{ tree.family }} | {{ tree.native_region }}</small>
+                        <!--<small class="d-block">{{ tree.native_region }}</small>-->
+
+                    {% endif %}
+
+                </div>
+            </div>
+
+        </div>
+
+        {% empty %}
+            <p>No trees found.</p>
+        {% endfor %}
+
+    </div>
+
+    {% else %}
+
+        {% for tree in trees %}
+
+        <div class="card mb-2">
+            <div class="card-body">
+
+                {% if edit_tree and edit_tree.id == tree.id %}
+
+                    <form class="editTreeForm"
+                        action="{% url 'trees:edit_tree' tree.id %}"
+                        method="post">
+
+                        {% csrf_token %}
+
+                        <input type="text" name="common_name"
+                            value="{{ tree.common_name }}"
+                            class="form-control mb-2">
+
+                        <input type="text" name="scientific_name"
+                            value="{{ tree.scientific_name }}"
+                            class="form-control mb-2">
+
+                        <input type="text" name="family"
+                            value="{{ tree.family }}"
+                            class="form-control mb-2">
+
+                        <input type="text" name="native_region"
+                            value="{{ tree.native_region }}"
+                            class="form-control mb-2">
+
+                        <div class="d-flex gap-2 mt-2">
+                            <button type="submit" class="btn btn-success btn-sm">Save</button>
+
+                            <a href="?section=trees&view=list"
+                            class="btn btn-secondary btn-sm">Cancel</a>
+                        </div>
+
+                    </form>
+
+                {% else %}
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+                            <h5 class="mb-1">
+                                {{ tree.common_name }}
+                                <span class="text-muted">| {{ tree.scientific_name }}</span>
+                            </h5>
+                            <small class="text-muted">{{ tree.family }} | {{ tree.native_region }}</small>
+                            <!--<small class="d-block">{{ tree.native_region }}</small>-->
+                        </div>
+
+                        <div class="d-flex align-items-center gap-3">
+
+                            <a href="{% url 'tree_details' tree.id %}" class="btn btn-success btn-sm">
+                                {% heroicon_outline "plus" class="w-4 h-4" %}
+                            </a>
+
+                            <input
+                                type="checkbox" class="form-check-input tree-checkbox m-0" value="{{ tree.id }}"
+                            >
+
+                        </div>
+                    </div>
+
+                {% endif %}
+
+            </div>
+        </div>
+
+        {% empty %}
+        <p>No trees found.</p>
+        {% endfor %}
+
+    {% endif %}
+
+
+
+    <nav class="mt-3">
+        <ul class="pagination">
+
+            {% if trees.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?section=trees&page={{ trees.previous_page_number }}&view={{ view_mode }}{% if search %}&search={{ search }}{% endif %}">
+                        Previous
+                    </a>
+                </li>
+            {% endif %}
+
+            <li class="page-item active">
+                <span class="page-link">
+                    Page {{ trees.number }} of {{ trees.paginator.num_pages }}
+                </span>
+            </li>
+
+            {% if trees.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?section=trees&page={{ trees.next_page_number }}&view={{ view_mode }}{% if search %}&search={{ search }}{% endif %}">
+                        Next
+                    </a>
+                </li>
+            {% endif %}
+
+        </ul>
+    </nav>

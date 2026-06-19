@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!--<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Upload</button>
+</form>-->
+
+<section class="mt-50 mb-100 pt-1 bg-upload">
+    <div class="container pt-3">
+        <div class="row justify-content-center">
+            <!--Form-->
+            <div class="col-12 col-md-8 bg-light p-5 rounded">
+                <div class="contact-form">
+                    
+                    <!--Section Heading-->
+                    <div class="section-heading text-center">
+                        <h2 class="fw-bold">UPLOAD PROFESSION</h2>
+                        <hr></hr>
+                        <p>Please Enter Details for jobs related to information from Troot</p>
+                        <div class="line mx-auto"></div>
+                    </div>
+
+                    <form action="{% url 'upload_job' %}" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row">
+
+                            <div class="mb-3 col-12 col-md-6">
+                                <input type="text" name="job-title" class="form-control" placeholder="Job Title" required>
+                            </div>
+                            <div class="mb-3 col-12 col-md-6">
+                                <input type="text" name="job-sector" class="form-control" placeholder="Job Sector" required>
+                            </div>                            
+                            <div class="input-group mb-3">
+                                <input type="file" name="job-image" class="form-control">
+                            </div>
+                            <div class="mb-3 col-12">
+                                <textarea name="job-description" class="form-control" placeholder="Describe What This Job Is About." rows="3"></textarea>
+                            </div>
+
+                            <div class="mb-3 text-center">
+                                <button type="submit" class="btn btn-success"><strong>Upload</strong></button>
+                            </div>
+
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

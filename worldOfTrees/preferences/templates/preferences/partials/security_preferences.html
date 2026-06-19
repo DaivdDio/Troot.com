@@ -1,0 +1,281 @@
+{% load heroicons %}
+
+<h2>Security</h2>
+
+    <div class="modal fade" id="restoreModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Restoring Database</h5>
+                </div>
+
+                <div class="modal-body">
+
+                    <p class="text-muted mb-3" id="restoreMessage">
+                        Preparing restore...
+                    </p>
+
+                    <div class="progress">
+                        <div id="restoreProgress"
+                            class="progress-bar progress-bar-striped progress-bar-animated"
+                            style="width: 100%">
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="card shadow-sm border-0 p-4">
+
+        <!-- HEADER -->
+        <h4 class="mb-3">Security & Database</h4>
+        <p class="text-muted small mb-4">
+            Backup or restore your database. These actions are restricted to superusers.
+        </p>
+
+        
+
+        <!-- BACKUP SECTION -->
+        <div class="mb-4">
+
+            <h6 class="mb-2">Backup Database</h6>
+
+            <form method="post" action="{% url 'accounts:backup_database' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-warning">
+                    ⬇ Download Backup
+                </button>
+            </form>
+
+        </div>
+
+        <hr>
+
+        <!--<div class="card mt-4 p-3">
+
+            <h5>Backup Activity</h5>
+
+            <ul class="list-group">
+
+                {% for log in backup_logs %}
+
+                    <li class="list-group-item">
+                        <strong>{{ log.status|title }}</strong> —
+                        {{ log.filename }} <br>
+                        <small class="text-muted">
+                            {{ log.created_at }} | {{ log.message }}
+                        </small>
+                    </li>
+
+                {% empty %}
+
+                    <li class="list-group-item text-muted">
+                        No backup activity yet
+                    </li>
+
+                {% endfor %}
+
+            </ul>
+
+        </div>-->
+
+        <div class="card shadow-sm border-0 p-4 my-4">
+
+            <h5 class="mb-2">Backup Scheduler</h5>
+
+            <!-- STATUS -->
+            <div class="mb-2">
+                {% if schedule and schedule.enabled %}
+                    <span class="badge bg-success">
+                        Active
+                    </span>
+                {% else %}
+                    <span class="badge bg-secondary">
+                        Inactive
+                    </span>
+                {% endif %}
+            </div>
+
+            <!-- CURRENT CONFIGURATION -->
+            <p class="text-muted small mb-3">
+
+                {% if schedule and schedule.enabled %}
+
+                    <strong>Current Schedule:</strong>
+
+                    {{ schedule.interval|title }}
+
+                    {% if schedule.time %}
+                        at {{ schedule.time }}
+                    {% endif %}
+
+                    {% if schedule.days %}
+                        <br>
+                        Days: {{ schedule.days }}
+                    {% endif %}
+
+                {% else %}
+
+                    No backup schedule configured.
+
+                {% endif %}
+
+            </p>
+
+            <!-- SUCCESS MESSAGE -->
+            {% if saved == "schedule" %}
+                <div class="alert alert-success alert-dismissible fade show">
+                    Backup schedule saved successfully.
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="alert">
+                    </button>
+                </div>
+            {% endif %}
+
+            <form method="post"
+                action="{% url 'accounts:save_backup_schedule' %}">
+
+                {% csrf_token %}
+
+                <!-- ENABLE -->
+                <div class="form-check form-switch mb-3">
+
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="enabled"
+                        name="enabled"
+                        {% if schedule and schedule.enabled %}checked{% endif %}>
+
+                    <label class="form-check-label" for="enabled">
+                        Enable Automatic Backups
+                    </label>
+
+                </div>
+
+                <!-- INTERVAL -->
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Backup Interval
+                    </label>
+
+                    <select class="form-select" name="interval">
+
+                        <option value="daily"
+                            {% if schedule.interval == "daily" %}selected{% endif %}>
+                            Daily
+                        </option>
+
+                        <option value="weekly"
+                            {% if schedule.interval == "weekly" %}selected{% endif %}>
+                            Weekly
+                        </option>
+
+                        <option value="custom"
+                            {% if schedule.interval == "custom" %}selected{% endif %}>
+                            Custom
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <!-- DAYS -->
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Backup Days
+                    </label>
+
+                    <div class="row">
+
+                        {% for value, label in days %}
+                        <div class="col-md-4 mb-2">
+
+                            <div class="form-check">
+
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    name="days"
+                                    value="{{ value }}"
+                                    id="{{ value }}"
+                                    {% if value in schedule_days %}checked{% endif %}>
+
+                                <label class="form-check-label"
+                                    for="{{ value }}">
+                                    {{ label }}
+                                </label>
+
+                            </div>
+
+                        </div>
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+                <!-- TIME -->
+                <div class="mb-4">
+
+                    <label class="form-label">
+                        Backup Time
+                    </label>
+
+                    <input
+                        type="time"
+                        name="time"
+                        class="form-control"
+                        value="{% if schedule.time %}{{ schedule.time|time:'H:i' }}{% endif %}">
+
+                </div>
+
+                <button type="submit"
+                        class="btn btn-primary">
+                    Save Schedule
+                </button>
+
+            </form>
+
+        </div>
+
+        <hr>
+
+        <!-- RESTORE SECTION -->
+        <div class="mb-3">
+
+            <h6 class="mb-2">Restore Database</h6>
+
+            <form id="restoreForm" enctype="multipart/form-data">
+
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <input type="file"
+                        name="backup_file"
+                        class="form-control"
+                        required>
+                    <small class="text-muted">
+                        Upload a valid .json backup file
+                    </small>
+                </div>
+
+                <button type="submit" class="btn btn-danger">
+                    ⟳ Restore Database
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>

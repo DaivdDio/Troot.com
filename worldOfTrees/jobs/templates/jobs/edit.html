@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<section class="mt-50 mb-100 pt-1 bg-upload">
+    <div class="container pt-3">
+        <div class="row justify-content-center">
+            <!--Form-->
+            <div class="col-12 col-md-8 bg-light p-5 rounded">
+                <div class="contact-form">
+                    
+                    <!--Section Heading-->
+                    <div class="section-heading text-center">
+                        <h2 class="fw-bold">UPDATE PROFESSION</h2>
+                        <hr></hr>
+                        <p>Please Update Details for jobs related to information from Troot</p>
+                        <div class="line mx-auto"></div>
+                    </div>
+
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="mb-3 col-12 col-md-6">
+                                <input type="text" name="job-title" value="{{ job.title }}" class="form-control" required>
+                            </div>
+                            <div class="mb-3 col-12 col-md-6">
+                                <input type="text" name="job-sector" value="{{ job.sector }}" class="form-control" required>
+                            </div>
+                            <div class="input-group mb-3">
+                                <input type="file" name="job-image" class="form-control">
+                            </div>
+                            <div class="mb-3 col-12">
+                                <textarea name="job-description" class="form-control">{{ job.description }}</textarea>
+                            </div>
+
+                            
+                            <div class="mb-3 text-center">
+                                <button type="submit" class="btn btn-primary">Update</button>
+                            </div>
+
+
+                        </div>
+
+                        
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+{% endblock %}
